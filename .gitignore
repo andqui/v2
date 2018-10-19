@@ -46,3 +46,6 @@ vendor
 # in case you accidentally run npm at this level
 npm-debug.log
 node_modules/
+
+# ignore idea
+.idea
