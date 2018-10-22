@@ -1,16 +1,19 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
-docker_build(
+container_image(
     name = "docker",
-    base = "//docker:nginx",
-    debs = [
-        ":deb",
-    ],
+    base = "@nginx//image",
+    #debs = [
+    #    ":deb",
+    #],
     files = [
-        ":tar-src",
+        ":tar-src"
+    ],
+    tars = [
+        ":tar",
     ],
     ports = [
         "80",
@@ -41,15 +44,15 @@ pkg_tar(
     strip_prefix = "/myaccount/dist",
 )
 
-pkg_deb(
-    name = "deb",
-    data = ":tar",
-    depends = [
-        "nginx",
-    ],
-    description = "staffjoy myaccount static deb",
-    homepage = "https://www.staffjoy.com",
-    maintainer = "Staffjoy <hello@staffjoy.com>",
-    package = "staffjoy",
-    version = "0.0.1",
-)
+#pkg_deb(
+#    name = "deb",
+#    data = ":tar",
+    #depends = [
+    #    "nginx",
+    #],
+#    description = "staffjoy myaccount static deb",
+#    homepage = "https://www.staffjoy.com",
+#    maintainer = "Staffjoy <hello@staffjoy.com>",
+#    package = "staffjoy",
+#    version = "0.0.1",
+#)

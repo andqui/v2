@@ -17,18 +17,18 @@ load("//docker:docker_pull.bzl", "docker_pull")
     dockerfile = "//docker:Dockerfile." + name,
     tag = "local:" + name,
 ) for name in [
-    "ubuntu-trusty",
+    #"ubuntu-trusty",
     "ubuntu-xenial",
     "docker-nginx",
 ]]
 
 # NGINX
 
-http_file(
-    name='nginx',
-    url='http://nginx.org/packages/ubuntu/pool/nginx/n/nginx/nginx_1.10.1-1~trusty_amd64.deb',
-    sha256='06b589dc9b3e064faa7fbc6b6c6de629a3ec59254ac8b54770fa3dc8dd1718f1',
-)
+#http_file(
+#    name='nginx',
+#    url='http://nginx.org/packages/ubuntu/pool/nginx/n/nginx/nginx_1.10.1-1~trusty_amd64.deb',
+#    sha256='06b589dc9b3e064faa7fbc6b6c6de629a3ec59254ac8b54770fa3dc8dd1718f1',
+#)
 
 # NODEJS
 
@@ -302,4 +302,46 @@ new_git_repository(
     build_file = "third_party/go/x_crypto.BUILD",
     commit = "6ab629be5e31660579425a738ba8870beb5b7404",
     remote = "https://github.com/golang/crypto.git"
+)
+
+http_archive(
+    name = "io_bazel_rules_go",
+    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.16.0/rules_go-0.16.0.tar.gz"],
+    sha256 = "ee5fe78fe417c685ecb77a0a725dc9f6040ae5beb44a0ba4ddb55453aad23a8a",
+)
+
+git_repository(
+    name = "io_bazel_rules_docker",
+    remote = "https://github.com/bazelbuild/rules_docker.git",
+    tag = "v0.5.1",
+)
+load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
+go_rules_dependencies()
+go_register_toolchains()
+
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    _go_image_repos = "repositories",
+)
+
+_go_image_repos()
+
+load("@io_bazel_rules_docker//container:container.bzl",
+    "container_pull",
+    container_repositories = "repositories")
+
+container_repositories()
+
+container_pull(
+    name = "nginx",
+    registry ="index.docker.io",
+    repository = "library/nginx",
+    tag = "latest",
+)
+
+container_pull(
+    name = "ubuntu-trusty",
+    registry ="index.docker.io",
+    repository = "library/ubuntu",
+    tag = "trusty",
 )

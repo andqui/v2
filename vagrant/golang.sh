@@ -2,10 +2,10 @@
 PATH=$PATH:$GOPATH/bin:/usr/local/go/bin
 
 if [ ! -d /usr/local/go ]; then
-    sudo curl -O https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz
-    sudo tar -xvf go1.7.linux-amd64.tar.gz
+    sudo curl -O https://dl.google.com/go/go1.11.1.linux-amd64.tar.gz
+    sudo tar -xvf go1.11.1.linux-amd64.tar.gz
     sudo mv go /usr/local
-    sudo rm go1.7.linux-amd64.tar.gz
+    sudo rm go1.11.1.linux-amd64.tar.gz
     echo "export GOPATH=$GOPATH" >> "$VHOME/.profile"
     echo "export PATH=\$PATH:\$GOPATH/bin:/usr/local/go/bin" >> "$VHOME/.profile"
 fi
@@ -30,7 +30,12 @@ if ! command -V glide ; then
 fi
 
 if ! command -V migrate ; then 
-    go get github.com/mattes/migrate
+    go get -u github.com/golang-migrate/migrate/cli
+    cd $GOPATH/src/github.com/golang-migrate/migrate/cli
+    go get -u github.com/go-sql-driver/mysql
+    go build -tags 'mysql' -o migrate github.com/golang-migrate/migrate/cli
+    sudo mv ./migrate /usr/local/bin/migrate
+    cd ~/
 fi
 
 if ! command -V buildifier ; then

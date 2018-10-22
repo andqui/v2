@@ -12,6 +12,7 @@ unison \
     -ignore "Path */node_modules" \
     -ignore "Path bazel-*" \
     -ignore "Path vendor" \
+    -ignore "Path .idea" \
     -ignore "Name *~" \
     -ignore "Name .*.swp" \
     -ignore "Name .*~" \
