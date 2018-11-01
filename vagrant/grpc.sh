@@ -8,9 +8,10 @@ fi
 
 mkdir tmp
 cd tmp
-git clone https://github.com/protocolbuffers/protobuf.git
-cd protobuf
-git submodule update --init --recursive
+# Subset of protobuf to have a faster setup
+curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz
+tar -xvzf protobuf-cpp-3.6.1.tar.gz
+cd protobuf-3.6.1
 ./autogen.sh
 ./configure
 make

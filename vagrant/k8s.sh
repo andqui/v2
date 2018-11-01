@@ -69,10 +69,7 @@ do
     sleep 1
 done
 
-# To be able to reprovisioning while fixing various errors
-if [kubectl get ns | grep -c "development" -eq 0]; then
-    kubectl create namespace development
+kubectl create namespace development
 
-    # kick off account-mysql
-    kubectl --namespace=development create -R -f /vagrant/ci/k8s/development/infrastructure/app-mysql
-fi
+# kick off account-mysql
+kubectl --namespace=development create -R -f /vagrant/ci/k8s/development/infrastructure/app-mysql
